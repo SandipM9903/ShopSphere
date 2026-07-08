@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: shopsphere-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shopsphere
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # Week 1: validate/update while iterating on the schema.
+      # Once the schema stabilizes, switch to 'validate' and manage
+      # changes via a migration tool (Flyway/Liquibase) - a good
+      # thing to mention in interviews as a "lesson learned".
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false   # avoid the "Open Session in View" anti-pattern
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+# Custom JWT config - read via @Value or a @ConfigurationProperties class
+app:
+  jwt:
+    secret: CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_BEFORE_ANYTHING_ELSE
+    access-token-expiration-ms: 900000      # 15 minutes
+    refresh-token-expiration-ms: 604800000  # 7 days
+
+logging:
+  level:
+    com.shopsphere: DEBUG
+    org.hibernate.SQL: DEBUG
