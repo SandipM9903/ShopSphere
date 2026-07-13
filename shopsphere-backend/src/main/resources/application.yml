@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/shopsphere
     username: postgres
-    password: postgres
+    password: root
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -35,7 +35,7 @@ spring:
 # Custom JWT config - read via @Value or a @ConfigurationProperties class
 app:
   jwt:
-    secret: CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_BEFORE_ANYTHING_ELSE
+    secret: "5cVZFbMK9LVQdq+ebWKtfAzdcekWoxm2qvG1EO90+DoFGMtPzZPfE0CzEb4hGRM64NgpjAunZjrk8LxnKVm+6w=="
     access-token-expiration-ms: 900000      # 15 minutes
     refresh-token-expiration-ms: 604800000  # 7 days
 
