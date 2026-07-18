@@ -7,7 +7,8 @@ import com.shopsphere.backend.repository.CategoryRepository;
 import com.shopsphere.backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 
-
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.cache.annotation.CacheEvict;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +24,20 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Cacheable(value = "categories", key = "'all'")
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream()
                 .map(CategoryResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "categories", key = "#id")
     public CategoryResponse getCategoryById(UUID id) {
         Category category = findCategoryOrThrow(id);
         return CategoryResponse.fromEntity(category);
     }
 
+    @CacheEvict(value = "categories", key = "'all'")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request) {
@@ -44,6 +49,10 @@ public class CategoryService {
         return CategoryResponse.fromEntity(saved);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "categories", key = "#id"),
+            @CacheEvict(value = "categories", key = "'all'")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public CategoryResponse updateCategory(UUID id, CategoryRequest request) {
@@ -54,6 +63,10 @@ public class CategoryService {
         return CategoryResponse.fromEntity(category);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "categories", key = "#id"),
+            @CacheEvict(value = "categories", key = "'all'")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void deleteCategory(UUID id) {

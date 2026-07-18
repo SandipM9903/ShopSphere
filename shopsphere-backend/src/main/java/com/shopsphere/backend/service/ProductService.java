@@ -7,12 +7,15 @@ import com.shopsphere.backend.entity.Product;
 import com.shopsphere.backend.exception.ResourceNotFoundException;
 import com.shopsphere.backend.repository.CategoryRepository;
 import com.shopsphere.backend.repository.ProductRepository;
+
+import org.springframework.cache.annotation.Cacheable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.UUID;
 
@@ -39,6 +42,7 @@ public class ProductService {
                 .map(ProductResponse::fromEntity);
     }
 
+    @Cacheable(value = "products", key = "#id")
     public ProductResponse getProductById(UUID id) {
         return ProductResponse.fromEntity(findProductOrThrow(id));
     }
@@ -60,6 +64,7 @@ public class ProductService {
         return ProductResponse.fromEntity(saved);
     }
 
+    @CacheEvict(value = "products", key = "#id")
     @PreAuthorize("hasAnyRole('ADMIN', 'SELLER')")
     @Transactional
     public ProductResponse updateProduct(UUID id, ProductRequest request) {
@@ -75,6 +80,7 @@ public class ProductService {
         return ProductResponse.fromEntity(product);
     }
 
+    @CacheEvict(value = "products", key = "#id")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void deleteProduct(UUID id) {
