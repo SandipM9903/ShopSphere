@@ -3,11 +3,15 @@ package com.shopsphere.backend.dto;
 import com.shopsphere.backend.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ProductResponse {
 
@@ -29,7 +33,6 @@ public class ProductResponse {
                 product.getCategory().getName(),
                 product.getPrice(),
                 product.getStockQty(),
-                product.isActive()
-        );
+                product.isActive());
     }
 }

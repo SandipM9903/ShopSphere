@@ -3,10 +3,14 @@ package com.shopsphere.backend.dto;
 import com.shopsphere.backend.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class CategoryResponse {
 
@@ -22,7 +26,6 @@ public class CategoryResponse {
         return new CategoryResponse(
                 category.getId(),
                 category.getName(),
-                category.getDescription()
-        );
+                category.getDescription());
     }
 }
